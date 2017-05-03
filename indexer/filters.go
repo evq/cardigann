@@ -71,6 +71,17 @@ func invokeFilter(name string, args interface{}, value string) (string, error) {
 		}
 		return strings.Replace(value, from, to, -1), nil
 
+	case "re_replace":
+		pattern, ok := (args.([]interface{}))[0].(string)
+		if !ok {
+			return "", fmt.Errorf("Filter %q requires a string argument at idx 0", name)
+		}
+		replacement, ok := (args.([]interface{}))[1].(string)
+		if !ok {
+			return "", fmt.Errorf("Filter %q requires a string argument at idx 1", name)
+		}
+		return filterRegexpReplace(pattern, replacement, value)
+
 	case "trim":
 		cutset, ok := args.(string)
 		if !ok {
@@ -84,7 +95,7 @@ func invokeFilter(name string, args interface{}, value string) (string, error) {
 			return "", fmt.Errorf("Filter %q requires a string argument at idx 0", name)
 		}
 		return value + str, nil
-	
+
 	case "prepend":
 		str, ok := args.(string)
 		if !ok {
@@ -143,6 +154,23 @@ func filterRegexp(pattern string, value string) (string, error) {
 	}
 
 	return matches[0], nil
+}
+
+func filterRegexpReplace(pattern string, replacement string, value string) (string, error) {
+	re, err := regexp.Compile(pattern)
+	if err != nil {
+		return "", err
+	}
+
+	matches := re.FindStringSubmatch(value)
+
+	if len(matches) == 0 {
+		return "", errors.New("No matches found for pattern")
+	}
+
+	filterLogger.WithFields(logrus.Fields{"matches": matches}).Debug("Regex matched")
+
+	return re.ReplaceAllString(value, replacement), nil
 }
 
 func splitDecimalStr(s string) (int, float64, error) {
