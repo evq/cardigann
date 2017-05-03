@@ -27,9 +27,9 @@
       tv-search: [q, season, ep]
 
   search:
-    path: "search.php"
+    path: "{{if .Query.Keywords }}search.php{{end}}"
     inputs:
-      terms: "{{if .Query.Keywords }}{{ .Query.Keywords }}{{else}}test{{end}}"
+      terms: "{{ .Query.Keywords }}"
     rows:
       selector: "table.listing tr.category_0"
       after: 1
