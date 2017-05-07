@@ -24,8 +24,13 @@
         filters:
           - name: split
             args: [" ", 0 ]
-          - name: dateparse
-            args: "(01/02/06)"
+          - name: replace
+            args: ["(", ""]
+          - name: replace
+            args: [")", ""]
+          - name: replace
+            args: ["/", "-"]
+          - name: fuzzytime
     fields:
       category:
         text: "1"
