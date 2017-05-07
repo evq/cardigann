@@ -19,6 +19,13 @@
       value: "{{ .Query.Keywords }}"
     rows:
       selector: "div.release-links"
+      dateheaders:
+        selector: table.release-info
+        filters:
+          - name: split
+            args: [" ", 0 ]
+          - name: dateparse
+            args: "(01/02/06)"
     fields:
       category:
         text: "1"
@@ -30,7 +37,7 @@
           - name: replace
             args: ["release-links", ""]
           - name: re_replace
-            args: [" ?([^ ]+)?-(\\d+-\\d+p)", "http://horriblesubs.info/shows/$1#$2"]
+            args: [" ?([^ ]+)?-(\\d+v?\\d?-\\d+p)", "http://horriblesubs.info/shows/$1#$2"]
       download:
         selector: table.release-table > tbody > tr > td.hs-magnet-link > span > a
         attribute: href
