@@ -42,7 +42,7 @@
           - name: replace
             args: ["release-links", ""]
           - name: re_replace
-            args: [" ?([^ ]+)?-(\\d+v?\\d?-\\d+p)", "http://horriblesubs.info/shows/$1#$2"]
+            args: [" ?(\\S+?)-((?:s\\d-)?(?:\\d+v?\\d?-){0,2}\\d+p)", "http://horriblesubs.info/shows/$1#$2"]
       download:
         selector: table.release-table > tbody > tr > td.hs-magnet-link > span > a
         attribute: href
