@@ -688,6 +688,12 @@ func (r *Runner) Search(query torznab.Query) ([]torznab.ResultItem, error) {
 		WithFields(logrus.Fields{"query": query.Encode()}).
 		Infof("Searching indexer")
 
+	for key, values := range r.definition.Search.Headers {
+		for i := range values {
+			r.browser.AddRequestHeader(key, values[i])
+		}
+	}
+
 	vals := url.Values{}
 
 	for name, val := range r.definition.Search.Inputs {
